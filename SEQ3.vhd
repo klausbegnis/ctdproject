@@ -10,6 +10,7 @@ end entity;
 architecture Rom_Arch of SEQ3 is
   type memory is array (00 to 15) of std_logic_vector(17 downto 0);
   constant my_Rom : memory := (
+
 	00 => "000000110000111110",
 	01 => "000000011111100111",
    	02 => "101111100000110000",
@@ -26,6 +27,7 @@ architecture Rom_Arch of SEQ3 is
 	13 => "000101101101101110",
 	14 => "111000101001000100",
 	15 => "100010001000101111");
+
 	
 begin
    process (address) --//o adress vai ser o número da rodada.

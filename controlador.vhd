@@ -9,6 +9,7 @@ end controlador;
 architecture fsmcontrolador of controlador is
     type STATES is (start, setup, play_fpga, play_user, check, result, next_round, wait1);
     signal EAtual, PEstado: STATES;
+
 begin
     
 

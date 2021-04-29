@@ -10,9 +10,10 @@ end entity;
 architecture Rom_Arch of SEQ2 is
   type memory is array (00 to 15) of std_logic_vector(17 downto 0);
   constant my_Rom : memory := (
+
 	00 => "010001000011111001",
 	01 => "100010011100110011",
-   	02 => "010101000011111000",
+	02 => "010101000011111000",
 	03 => "111001010100001111",
 	04 => "011001110011110000",
 	05 => "011100100011100101",
