@@ -39,6 +39,16 @@ architecture arqdata of datapath is
 	);
     end component;
 
+    component ff_d_14 is port
+    (
+    CLK: in std_logic;
+    D: in std_logic_vector(13 downto 0);
+    RST: in std_logic;
+    EN: in std_logic;
+    Q: out std_logic_vector(13 downto 0)
+	);
+    end component;
+
     signal SEQ_FPGA: std_logic_vector(17 downto 0);
     signal h70, h71, h60, h61, h50, h51, h40, h41, h30, h31, h20, h21, h10, h11, h00, h01: std_logic_vector(6 downto 0);
     signal dec7h6, dec7h4,dec7h2_00,dec7h2_10,dec7h2_11,dec7h1_01,dec7h1_10,dec7h1_11,dec7h0_00,dec7h0_01,dec7h0_10,dec7h0_11: std_logic_vector(6 downto 0);
@@ -57,6 +67,16 @@ begin
     F_POINTS <= "00" & ronda & bonus;
     U_POINTS <= "00" & ronda & bonus;
     entry_dec_4 <= "00" & setup(5 downto 4);
+
+-- REG_setup
+    REG_setup: ff_d_14 port map
+    (
+        CLK => clk50,
+        D => sw_entra(13 downto 0),
+        RST => r1,
+        EN => e1,
+        Q => setup        
+    );
 
 -- LEDR 17-0
     ledr170: mux_2_1_18 port map
