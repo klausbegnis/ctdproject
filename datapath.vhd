@@ -49,6 +49,7 @@ architecture arqdata of datapath is
     signal F_POINTS, U_POINTS: std_logic_vector(11 downto 0);
     signal entry_dec_4: std_logic_vector(3 downto 0);
     signal ROUND_BCD: std_logic_vector(7 downto 0);
+    signal end_round_aux: std_logic;
 
 
 begin
@@ -78,7 +79,7 @@ begin
 
     mux_h7_1: mux_2_1 port map
     (
-        E => e5,
+        E => end_round_aux,
         A => "0001110",
         B => "1000001",
         S => h71
@@ -105,7 +106,7 @@ begin
 
     mux_h6_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => "0001100",
        B => "0010010",
        S => h61
@@ -132,7 +133,7 @@ begin
 
     mux_h5_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => "0010000",
        B => "0000110",
        S => h51
@@ -159,7 +160,7 @@ begin
 
     mux_h4_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => "0001000",
        B => "0101111",
        S => h41
@@ -186,7 +187,7 @@ begin
 
     mux_h3_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => "0110111",
        B => "0110111",
        S => h31
@@ -213,7 +214,7 @@ begin
 
     mux_h2_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => dec7h2_10,
        B => dec7h2_11,
        S => h21
@@ -240,7 +241,7 @@ begin
 
     mux_h1_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => dec7h1_10,
        B => dec7h1_11,
        S => h11
@@ -267,7 +268,7 @@ begin
 
     mux_h0_1: mux_2_1 port map
    (
-       E => e5,
+       E => end_round_aux,
        A => dec7h0_10,
        B => dec7h0_11,
        S => h01
