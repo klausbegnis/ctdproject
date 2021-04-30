@@ -14,6 +14,56 @@ end datapath;
 
 architecture arqdata of datapath is
     
+    component SEQ1 is port
+    (
+    address : in std_logic_vector(3 downto 0);
+    data : out std_logic_vector(17 downto 0)
+    );
+    end component;
+
+    component SEQ2 is port
+    (
+    address : in std_logic_vector(3 downto 0);
+    data : out std_logic_vector(17 downto 0)
+    );
+    end component;
+
+    component SEQ3 is port
+    (
+    address : in std_logic_vector(3 downto 0);
+    data : out std_logic_vector(17 downto 0)
+    );
+    end component;
+
+    component SEQ4 is port
+    (
+    address : in std_logic_vector(3 downto 0);
+    data : out std_logic_vector(17 downto 0)
+    );
+    end component;
+
+    component mux_4_18 is port
+    (
+    E: in std_logic_vector(1 downto 0);
+	A: in std_logic_vector(17 downto 0);
+	B: in std_logic_vector(17 downto 0);
+    C: in std_logic_vector(17 downto 0);
+    D: in std_logic_vector(17 downto 0);
+    S: out std_logic_vector(17 downto 0)
+    );
+    end component;
+
+    component counter_4_bits is port
+    (
+    Data: in std_logic_vector(3 downto 0);
+    R: in std_logic;
+    E: in std_logic;
+    clk: in std_logic;
+    F: out std_logic_vector(3 downto 0);
+    tc: out std_logic
+    );
+    end component;
+
     component mux_2_1 is port
     (
     E: in std_logic;
@@ -69,14 +119,77 @@ architecture arqdata of datapath is
     signal end_round_aux, e3_and_not_btn1: std_logic;
     signal entry_sum: std_logic_vector(17 downto 0);
     signal out_sum: std_logic_vector(5 downto 0);
+    signal level_reset: std_logic;
+    signal useless_f: std_logic_vector(3 downto 0);
+    signal seq1_out, seq2_out,seq3_out,seq4_out: std_logic_vector(17 downto 0);
 
 begin
 
+    level_reset <= r1 or e4;
     entry_sum <= SEQ_FPGA xor sw_entra;
     F_POINTS <= "00" & ronda & not(bonus);
     U_POINTS <= "00" & not(ronda) & bonus;
     entry_dec_4 <= "00" & setup(5 downto 4);
     e3_and_not_btn1 <= e3 and not(key_entra);
+
+-- mux4_18
+    mux_sequenciadores: mux_4_18 port map
+    (
+        E => setup(5 downto 4),
+        A => seq1_out,
+        B => seq2_out,
+        C => seq3_out,
+        D => seq4_out,
+        S => SEQ_FPGA
+    );
+
+-- sequenciadores
+
+    sequenciador1: SEQ1 port map
+    (
+        address => ronda,
+        data => seq1_out
+    );
+
+    sequenciador2: SEQ2 port map
+    (
+        address => ronda,
+        data => seq2_out
+    );
+
+    sequenciador3: SEQ3 port map
+    (
+        address => ronda,
+        data => seq3_out
+    );
+
+    sequenciador4: SEQ4 port map
+    (
+        address => ronda,
+        data => seq4_out
+    );
+
+-- contadores + 1
+
+    counter_level: counter_4_bits port map
+    (
+        Data => setup(9 downto 6),
+        R => level_reset,
+        E => e2,
+        clk => clk1,
+        F => useless_f,
+        tc => end_FPGA
+    );
+
+    counter_time: counter_4_bits port map
+    (
+        Data => "1010",
+        R => level_reset,
+        E => e3,
+        clk => clk1,
+        F => tempo,
+        tc => end_time 
+    );
 
 -- sum bit-a-bit
 
