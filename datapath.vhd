@@ -49,6 +49,13 @@ architecture arqdata of datapath is
 	);
     end component;
 
+    component sum is port
+    (
+    f: in std_logic_vector(17 downto 0);
+    q: out std_logic_vector(5 downto 0)
+    );
+    end component;
+
     signal SEQ_FPGA: std_logic_vector(17 downto 0);
     signal h70, h71, h60, h61, h50, h51, h40, h41, h30, h31, h20, h21, h10, h11, h00, h01: std_logic_vector(6 downto 0);
     signal dec7h6, dec7h4,dec7h2_00,dec7h2_10,dec7h2_11,dec7h1_01,dec7h1_10,dec7h1_11,dec7h0_00,dec7h0_01,dec7h0_10,dec7h0_11: std_logic_vector(6 downto 0);
@@ -59,16 +66,28 @@ architecture arqdata of datapath is
     signal F_POINTS, U_POINTS: std_logic_vector(11 downto 0);
     signal entry_dec_4: std_logic_vector(3 downto 0);
     signal ROUND_BCD: std_logic_vector(7 downto 0);
-    signal end_round_aux: std_logic;
-
+    signal end_round_aux, e3_and_not_btn1: std_logic;
+    signal entry_sum: std_logic_vector(17 downto 0);
+    signal out_sum: std_logic_vector(5 downto 0);
 
 begin
 
-    F_POINTS <= "00" & ronda & bonus;
-    U_POINTS <= "00" & ronda & bonus;
+    entry_sum <= SEQ_FPGA xor sw_entra;
+    F_POINTS <= "00" & ronda & not(bonus);
+    U_POINTS <= "00" & not(ronda) & bonus;
     entry_dec_4 <= "00" & setup(5 downto 4);
+    e3_and_not_btn1 <= e3 and not(key_entra);
+
+-- sum bit-a-bit
+
+    sum_bit_a_bit: sum port map
+    (
+        f => entry_sum,
+        q => out_sum
+    );
 
 -- REG_setup
+
     REG_setup: ff_d_14 port map
     (
         CLK => clk50,
@@ -79,6 +98,7 @@ begin
     );
 
 -- LEDR 17-0
+
     ledr170: mux_2_1_18 port map
     (
         E => e2,
@@ -88,6 +108,7 @@ begin
     );
 
 -- MULTIPLEXADORES PARA HEXADECIMAIS
+
     mux_h7_0: mux_2_1 port map
     (
         E => e5,
