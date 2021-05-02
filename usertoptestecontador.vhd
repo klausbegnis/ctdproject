@@ -13,27 +13,29 @@ end usertop;
 
 architecture rtl of usertop is
 
-    component counter_4_bits is port
+    component counter_round is port
     (
-        Data: in std_logic_vector(3 downto 0);
-        R: in std_logic;
-        E: in std_logic;
-        clk: in std_logic;
-        F: out std_logic_vector(3 downto 0);
-        tc: out std_logic
+        DATA: in std_logic_vector(3 downto 0);
+		SET: in std_logic;
+		SET_VALUE: in std_logic_vector(3 downto 0);
+		E: in std_logic;
+		clk: in std_logic;
+		tc: out std_logic;
+		ronda: out std_logic_vector(3 downto 0)
     );
     end component;
 
 begin
     
-    contador: counter_4_bits port map
+    contador: counter_round port map
     (
-        Data => "1010",
-        R => SW(1),
-        E => SW(0),
-        clk => CLK_1Hz,
-        F => LEDR(3 downto 0),
-        tc => LEDR(17)
+        DATA => "0000",
+		SET => SW(1),
+		SET_VALUE => "1111",
+		E => SW(0),
+		clk => CLK_1Hz,
+		tc => LEDR(17),
+		ronda => LEDR(3 downto 0)
     );
     
 

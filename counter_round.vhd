@@ -21,7 +21,7 @@ begin
 	set_value_minus <= SET_VALUE - 1;
 	process (clk, set)
 	begin
-		if set = '1' then
+		if SET = '1' then
 			counter <= set_value_minus;
 		elsif (clk'event and clk = '1') then
 			if E = '1' then
@@ -40,6 +40,8 @@ begin
 			tc <= '0';
 		end if;
 	end process;
+
+	ronda <= counter;
 
 
 end rtl;

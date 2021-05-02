@@ -13,7 +13,26 @@ end datapath;
 
 
 architecture arqdata of datapath is
+
+    component decodBCD is port
+    (
+	E: in std_logic_vector(3 downto 0);
+	S: out std_logic_vector(7 downto 0)
+	);
+    end component;
     
+    component counter_round is port
+    (
+	DATA: in std_logic_vector(3 downto 0);
+	SET: in std_logic;
+	SET_VALUE: in std_logic_vector(3 downto 0);
+	E: in std_logic;
+	clk: in std_logic;
+	tc: out std_logic;
+	ronda: out std_logic_vector(3 downto 0)
+	);
+    end component;
+
     component SEQ1 is port
     (
     address : in std_logic_vector(3 downto 0);
@@ -131,6 +150,28 @@ begin
     U_POINTS <= "00" & not(ronda) & bonus;
     entry_dec_4 <= "00" & setup(5 downto 4);
     e3_and_not_btn1 <= e3 and not(key_entra);
+    end_round <= end_round_aux;
+
+-- round to bcd
+
+    conversor_to_bcd: decodBCD port map
+    (
+	E => ronda,
+	S => ROUND_BCD
+	);
+
+-- contador do rounds
+
+    contador_de_rounds: counter_round port map
+    (
+        DATA => "0000",
+        SET => e1,
+        SET_VALUE => setup(3 downto 0),
+        E => e4,
+        clk => clk50,
+        tc => end_round_aux,
+        ronda => ronda
+    );
 
 -- mux4_18
     mux_sequenciadores: mux_4_18 port map
