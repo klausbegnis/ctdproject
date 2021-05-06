@@ -14,6 +14,18 @@ end datapath;
 
 architecture arqdata of datapath is
 
+    component counter_bonus is port
+    (
+	DATA: in std_logic_vector(5 downto 0);
+	SET: in std_logic;
+	SET_VALUE: in std_logic_vector(5 downto 0);
+	E: in std_logic;
+	clk: in std_logic;
+	tc: out std_logic;
+	bonus: out std_logic_vector(5 downto 0)
+	);
+    end component;
+
     component decodBCD is port
     (
 	E: in std_logic_vector(3 downto 0);
@@ -135,9 +147,9 @@ architecture arqdata of datapath is
     signal F_POINTS, U_POINTS: std_logic_vector(11 downto 0);
     signal entry_dec_4: std_logic_vector(3 downto 0);
     signal ROUND_BCD: std_logic_vector(7 downto 0);
-    signal end_round_aux, e3_and_not_btn1: std_logic;
+    signal end_round_aux, e3_and_not_btn1, bonus_enable: std_logic;
     signal entry_sum: std_logic_vector(17 downto 0);
-    signal out_sum: std_logic_vector(5 downto 0);
+    signal out_sum, bonus_set_value: std_logic_vector(5 downto 0);
     signal level_reset: std_logic;
     signal useless_f: std_logic_vector(3 downto 0);
     signal seq1_out, seq2_out,seq3_out,seq4_out: std_logic_vector(17 downto 0);
@@ -151,6 +163,22 @@ begin
     entry_dec_4 <= "00" & setup(5 downto 4);
     e3_and_not_btn1 <= e3 and not(key_entra);
     end_round <= end_round_aux;
+    bonus_set_value <= "00" & setup(13 downto 10);
+    bonus_enable <= e3 and not(key_entra);
+
+-- counter_bonus
+
+    contador_de_bonus: counter_bonus port map
+    (
+        DATA => out_sum,
+        SET => e1,
+        SET_VALUE => bonus_set_value,
+        E => bonus_enable,
+        clk => clk50,
+        tc => end_bonus,
+        BONUS => bonus
+    );
+
 
 -- round to bcd
 
